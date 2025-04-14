@@ -10,23 +10,23 @@ These recommandations are based on TypeScript documentation, articles, and profe
 
 ## Table of contents
 
-1. [Invoking component functions directly](hashtag#invoking-component-functions-directly)
-2. [Nesting component definitions](hashtag#nesting-component-definitions)
-3. [Use template literals to combine strings](hashtag#use-template-literals-to-combine-strings)
-4. [Use === instead of ==](hashtag#use--instead-of-)
-5. [Use meaningful variable names](hashtag#use-meaningful-variable-names)
-6. [Use the same vocabulary for the same type of variable](hashtag#use-the-same-vocabulary-for-the-same-type-of-variable)
-7. [Use default arguments instead of conditionals](hashtag#use-default-arguments-instead-of-conditionals)
-8. [Function arguments and Type Aliases](hashtag#function-arguments-and-type-aliases)
-9. [Functions should do one thing](hashtag#functions-should-do-one-thing)
-10. [Favor functional programming over imperative programming](hashtag#favor-functional-programming-over-imperative-programming)
-11. [Encapsulate conditionals](hashtag#encapsulate-conditionals)
-12. [Avoid negative conditionals](hashtag#avoid-negative-conditionals)
-13. [Avoid type checking](hashtag#avoid-type-checking)
-14. [Remove dead code](hashtag#remove-dead-code)
-15. [Don't leave commented out code in your codebase](hashtag#dont-leave-commented-out-code-in-your-codebase)
-16. [TODO comments](hashtag#todo-comments)
-17. [Imports - TypeScript aliases](hashtag#imports---typescript-aliases)
+1. [Invoking component functions directly](#invoking-component-functions-directly)
+2. [Nesting component definitions](#nesting-component-definitions)
+3. [Use template literals to combine strings](#use-template-literals-to-combine-strings)
+4. [Use === instead of ==](#use--instead-of-)
+5. [Use meaningful variable names](#use-meaningful-variable-names)
+6. [Use the same vocabulary for the same type of variable](#use-the-same-vocabulary-for-the-same-type-of-variable)
+7. [Use default arguments instead of conditionals](#use-default-arguments-instead-of-conditionals)
+8. [Function arguments and Type Aliases](#function-arguments-and-type-aliases)
+9. [Functions should do one thing](#functions-should-do-one-thing)
+10. [Favor functional programming over imperative programming](#favor-functional-programming-over-imperative-programming)
+11. [Encapsulate conditionals](#encapsulate-conditionals)
+12. [Avoid negative conditionals](#avoid-negative-conditionals)
+13. [Avoid type checking](#avoid-type-checking)
+14. [Remove dead code](#remove-dead-code)
+15. [Don't leave commented out code in your codebase](#dont-leave-commented-out-code-in-your-codebase)
+16. [TODO comments](#todo-comments)
+17. [Imports - TypeScript aliases](#imports---typescript-aliases)
 
 
 ## Invoking component functions directly
@@ -37,22 +37,22 @@ These recommandations are based on TypeScript documentation, articles, and profe
 
 ```typescript
 export const EmailField = () => {
- const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
 
- return (
- <input
- type="email"
- value={email}
- onChange={(e) => setEmail(e.target.value)}
- />
- );
+  return (
+    <input
+      type="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
+  );
 }
 
 
 function App() {
- return (
- <div>{EmailField()}</ div>
- )
+  return (
+    <div>{EmailField()}</div>
+  )
 }
 ```
 
@@ -62,23 +62,23 @@ function App() {
 
 ```typescript
 export const EmailField = () => {
- const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
 
- return (
- <input
- type="email"
- value={email}
- onChange={(e) => setEmail(e.target.value)}
- />
- );
+  return (
+    <input
+      type="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
+  );
 }
 
 function App() {
- return (
- <div>
- <EmailField />
- </ div>
- )
+  return (
+    <div>
+      <EmailField />
+    </div>
+  )
 }
 ```
 
@@ -106,23 +106,23 @@ Additionally, if we conditionally render the custom hook, we will face a runtime
 
 ```typescript
 function App() {
- const EmailField = () => {
- const [email, setEmail] = useState("");
+  const EmailField = () => {
+    const [email, setEmail] = useState("");
 
- return (
- <input
- type="email"
- value={email}
- onChange={(e) => setEmail(e.target.value)}
- />
- );
- }
+    return (
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+    );
+  }
 
- return (
- <div>
- {EmailField()}
- </ div>
- )
+  return (
+    <div>
+      {EmailField()}
+    </div>
+  )
 }
 ```
 
@@ -132,22 +132,23 @@ function App() {
 
 ```typescript
 export const EmailField = () => {
- const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
 
- return (
- <input
- type="email"
- value={email}
- onChange={(e) => setEmail(e.target.value)}
- />
- );
+  return (
+    <input
+      type="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
+  );
 }
+
 function App() {
- return (
- <div>
- <EmailField />
- </ div>
- )
+  return (
+    <div>
+      <EmailField />
+    </div>
+  )
 }
 ```
 
@@ -248,7 +249,7 @@ console.log(num1 === num2) // evaluates to false
 
 ```typescript
 function between<T>(a1: T, a2: T, a3: T): boolean {
- return a2 <= a1 && a1 <= a3;
+  return a2 <= a1 && a1 <= a3;
 }
 ```
 
@@ -258,7 +259,7 @@ function between<T>(a1: T, a2: T, a3: T): boolean {
 
 ```typescript
 function between<T>(value: T, left: T, right: T): boolean {
- return left <= value && value <= right;
+  return left <= value && value <= right;
 }
 ```
 
@@ -315,8 +316,8 @@ Enhances code readability and maintainability by removing ambiguity and adding c
 
 ```typescript
 function loadPages(count?: number) {
- const loadCount = count !== undefined ? count : 10;
- // ...
+  const loadCount = count !== undefined ? count : 10;
+  // ...
 }
 ```
 
@@ -326,7 +327,7 @@ function loadPages(count?: number) {
 
 ```typescript
 function loadPages(count: number = 10) {
- // ...
+  // ...
 }
 ```
 
@@ -352,7 +353,7 @@ Helps code readability by eliminating the analysis of conditional logic.
 
 ```typescript
 function createMenu(title: string, body: string, buttonText: string, cancellable: boolean) {
- // ...
+  // ...
 }
  
 createMenu('Foo', 'Bar', 'Baz', true);
@@ -364,21 +365,21 @@ createMenu('Foo', 'Bar', 'Baz', true);
 
 ```typescript
 type MenuOptions = {
- title: string,
- body: string,
- buttonText: string,
- cancellable: boolean
+  title: string,
+  body: string,
+  buttonText: string,
+  cancellable: boolean
 };
  
 function createMenu(options: MenuOptions) {
- // ...
+  // ...
 }
  
 createMenu({
- title: 'Foo',
- body: 'Bar',
- buttonText: 'Baz',
- cancellable: true
+  title: 'Foo',
+  body: 'Bar',
+  buttonText: 'Baz',
+  cancellable: true
 });
 ```
 
@@ -404,12 +405,12 @@ TypeScript warns you about unused properties.
 
 ```typescript
 function emailActiveClients(clients: Client[]) {
- clients.forEach((client) => {
- const clientRecord = database.lookup(client);
- if (clientRecord.isActive()) {
- email(client);
- }
- });
+  clients.forEach((client) => {
+    const clientRecord = database.lookup(client);
+    if (clientRecord.isActive()) {
+      email(client);
+    }
+  });
 }
 ```
 
@@ -419,12 +420,12 @@ function emailActiveClients(clients: Client[]) {
 
 ```typescript
 function emailActiveClients(clients: Client[]) {
- clients.filter(isActiveClient).forEach(email);
+  clients.filter(isActiveClient).forEach(email);
 }
  
 function isActiveClient(client: Client) {
- const clientRecord = database.lookup(client);
- return clientRecord.isActive();
+  const clientRecord = database.lookup(client);
+  return clientRecord.isActive();
 }
 ```
 
@@ -450,19 +451,19 @@ Improves maintainability since the functions are easier to refactor.
 
 ```typescript
 const contributions = [
- {
- name: 'Uncle Bobby',
- linesOfCode: 500
- }, {
- name: 'Suzie Q',
- linesOfCode: 1500
- }
+  {
+    name: 'Uncle Bobby',
+    linesOfCode: 500
+  }, {
+    name: 'Suzie Q',
+    linesOfCode: 1500
+  }
 ];
  
 let totalOutput = 0;
  
 for (let i = 0; i < contributions.length; i++) {
- totalOutput += contributions[i].linesOfCode;
+  totalOutput += contributions[i].linesOfCode;
 }
 ```
 
@@ -472,17 +473,17 @@ for (let i = 0; i < contributions.length; i++) {
 
 ```typescript
 const contributions = [
- {
- name: 'Uncle Bobby',
- linesOfCode: 500
- }, {
- name: 'Suzie Q',
- linesOfCode: 1500
- }
+  {
+    name: 'Uncle Bobby',
+    linesOfCode: 500
+  }, {
+    name: 'Suzie Q',
+    linesOfCode: 1500
+  }
 ];
  
 const totalOutput = contributions
- .reduce((totalLines, output) => totalLines + output.linesOfCode, 0);
+  .reduce((totalLines, output) => totalLines + output.linesOfCode, 0);
 ```
 
 
@@ -506,7 +507,7 @@ JavaScript already has optimized array methods, make use of them! (no need to re
 
 ```typescript
 if (subscription.isTrial || account.balance > 0) {
- // ...
+  // ...
 }
 ```
 
@@ -516,11 +517,11 @@ if (subscription.isTrial || account.balance > 0) {
 
 ```typescript
 function canActivateService(subscription: Subscription, account: Account) {
- return subscription.isTrial || account.balance > 0;
+  return subscription.isTrial || account.balance > 0;
 }
  
 if (canActivateService(subscription, account)) {
- // ...
+  // ...
 }
 ```
 
@@ -547,11 +548,11 @@ If the function can be exported as a pure JavaScript, even better.
 
 ```typescript
 function isEmailNotUsed(email: string): boolean {
- // ...
+  // ...
 }
  
 if (isEmailNotUsed(email)) {
- // ...
+  // ...
 }
 ```
 
@@ -561,11 +562,11 @@ if (isEmailNotUsed(email)) {
 
 ```typescript
 function isEmailUsed(email: string): boolean {
- // ...
+  // ...
 }
  
 if (!isEmailUsed(email)) {
- // ...
+  // ...
 }
 ```
 
@@ -588,11 +589,11 @@ Code is less prone to errors.
 
 ```typescript
 function travelToTexas(vehicle: Bicycle | Car) {
- if (vehicle instanceof Bicycle) {
- vehicle.pedal(currentLocation, new Location('texas'));
- } else if (vehicle instanceof Car) {
- vehicle.drive(currentLocation, new Location('texas'));
- }
+  if (vehicle instanceof Bicycle) {
+    vehicle.pedal(currentLocation, new Location('texas'));
+  } else if (vehicle instanceof Car) {
+    vehicle.drive(currentLocation, new Location('texas'));
+  }
 }
 ```
 
@@ -604,7 +605,7 @@ function travelToTexas(vehicle: Bicycle | Car) {
 type Vehicle = Bicycle | Car;
  
 function travelToTexas(vehicle: Vehicle) {
- vehicle.move(currentLocation, new Location('texas'));
+  vehicle.move(currentLocation, new Location('texas'));
 }
 ```
 
@@ -632,11 +633,11 @@ It makes refactoring easier.
 
 ```typescript
 function oldRequestModule(url: string) {
- // ...
+  // ...
 }
  
 function requestModule(url: string) {
- // ...
+  // ...
 }
  
 const req = requestModule;
@@ -649,7 +650,7 @@ inventoryTracker('apples', req, 'www.inventory-awesome.io');
 
 ```typescript
 function requestModule(url: string) {
- // ...
+  // ...
 }
  
 const req = requestModule;
@@ -678,10 +679,10 @@ If it's not being called, get rid of it! It will still be saved in your version 
 
 ```typescript
 type User = {
- name: string;
- email: string;
- // age: number;
- // jobPosition: string;
+  name: string;
+  email: string;
+  // age: number;
+  // jobPosition: string;
 }
 ```
 
@@ -691,8 +692,8 @@ type User = {
 
 ```typescript
 type User = {
- name: string;
- email: string;
+  name: string;
+  email: string;
 }
 ```
 
@@ -718,8 +719,8 @@ Leave old code in your history.
 
 ```typescript
 function getActiveSubscriptions(): Promise<Subscription[]> {
- // ensure `dueDate` is indexed.
- return db.subscriptions.find({ dueDate: { $lte: new Date() } });
+  // ensure `dueDate` is indexed.
+  return db.subscriptions.find({ dueDate: { $lte: new Date() } });
 }
 ```
 
@@ -729,8 +730,8 @@ function getActiveSubscriptions(): Promise<Subscription[]> {
 
 ```typescript
 function getActiveSubscriptions(): Promise<Subscription[]> {
- // TODO: ensure `dueDate` is indexed.
- return db.subscriptions.find({ dueDate: { $lte: new Date() } });
+  // TODO: ensure `dueDate` is indexed.
+  return db.subscriptions.find({ dueDate: { $lte: new Date() } });
 }
 ```
 
@@ -767,14 +768,14 @@ import { UserService } from '@services/UserService';
 
 // tsconfig.json
 ...
- "compilerOptions": {
- ...
- "baseUrl": "src",
- "paths": {
- "@services": ["services/*"]
- }
- ...
- }
+"compilerOptions": {
+  ...
+  "baseUrl": "src",
+  "paths": {
+    "@services": ["services/*"]
+  }
+  ...
+}
 ...
 ```
 
