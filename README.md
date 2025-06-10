@@ -28,6 +28,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 16. [TODO comments](#todo-comments)
 17. [Imports - TypeScript aliases](#imports---typescript-aliases)
 18. [Always use curly braces for conditional statements](#always-use-curly-braces-for-conditional-statements)
+19. [Extract inline type definitions into proper type declarations](#extract-inline-type-definitions-into-proper-type-declarations)
 
 
 ## Invoking component functions directly
@@ -836,3 +837,81 @@ This practice helps avoid issues with automatic semicolon insertion and makes th
 
 - [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript#blocks--braces)
 - [ESLint curly rule](https://eslint.org/docs/rules/curly)
+
+## Extract inline type definitions into proper type declarations
+
+❌ Avoid
+
+```typescript
+function createUser({
+  name,
+  email,
+  role,
+}: {
+  name: string;
+  email: string;
+  role: 'admin' | 'user' | 'moderator';
+}) {
+  // ...
+}
+
+function updateProduct({
+  id,
+  title,
+  price,
+  isAvailable,
+}: {
+  id: number;
+  title: string;
+  price: number;
+  isAvailable: boolean;
+}) {
+  // ...
+}
+```
+
+✅ Prefer
+
+```typescript
+type CreateUserParams = {
+  name: string;
+  email: string;
+  role: 'admin' | 'user' | 'moderator';
+};
+
+function createUser({
+  name,
+  email,
+  role,
+}: CreateUserParams) {
+  // ...
+}
+
+type UpdateProductParams = {
+  id: number;
+  title: string;
+  price: number;
+  isAvailable: boolean;
+};
+
+function updateProduct({
+  id,
+  title,
+  price,
+  isAvailable,
+}: UpdateProductParams) {
+  // ...
+}
+```
+
+#### 🤔 ℹ️ Explanation 
+
+Extracting inline type definitions into proper type declarations improves code readability and reusability.
+It makes the function signature cleaner and easier to understand at a glance.
+Named types can be reused across multiple functions and exported for use in other modules.
+This practice also makes it easier to extend or modify the type definition in the future.
+
+#### 📚 References
+
+- [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
+- [TypeScript Handbook - Type Aliases](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-aliases)
