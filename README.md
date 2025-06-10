@@ -29,6 +29,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 17. [Imports - TypeScript aliases](#imports---typescript-aliases)
 18. [Always use curly braces for conditional statements](#always-use-curly-braces-for-conditional-statements)
 19. [Extract inline type definitions into proper type declarations](#extract-inline-type-definitions-into-proper-type-declarations)
+20. [Limit to one ternary operator per function](#limit-to-one-ternary-operator-per-function)
 
 
 ## Invoking component functions directly
@@ -915,3 +916,69 @@ This practice also makes it easier to extend or modify the type definition in th
 
 - [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
 - [TypeScript Handbook - Type Aliases](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-aliases)
+
+## Limit to one ternary operator per function
+
+❌ Avoid
+
+```typescript
+function getUserStatus(user: User, isLoading: boolean, hasError: boolean) {
+  return user && user.isActive && !isLoading ? (
+    'Active User'
+  ) : isLoading ? (
+    'Loading...'
+  ) : hasError ? (
+    'Error occurred'
+  ) : (
+    'Inactive User'
+  );
+}
+
+function calculateDiscount(price: number, isMember: boolean, isPremium: boolean) {
+  return isMember ? (
+    isPremium ? price * 0.8 : price * 0.9
+  ) : price;
+}
+```
+
+✅ Prefer
+
+```typescript
+function getUserStatus(user: User, isLoading: boolean, hasError: boolean) {
+  if (isLoading) {
+    return 'Loading...';
+  }
+  
+  if (hasError) {
+    return 'Error occurred';
+  }
+  
+  if (user && user.isActive) {
+    return 'Active User';
+  }
+  
+  return 'Inactive User';
+}
+
+function calculateDiscount(price: number, isMember: boolean, isPremium: boolean) {
+  if (!isMember) {
+    return price;
+  }
+  
+  const discountRate = isPremium ? 0.8 : 0.9;
+  return price * discountRate;
+}
+```
+
+#### 🤔 ℹ️ Explanation 
+
+Multiple or nested ternary operators significantly reduce code readability and make logic harder to follow.
+Using if-else statements or early returns makes the code more explicit and easier to understand.
+This practice improves debugging experience since each condition can be easily identified and tested.
+Complex ternary chains are prone to errors and make code maintenance more difficult.
+
+#### 📚 References
+
+- [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
+- [ESLint no-nested-ternary rule](https://eslint.org/docs/rules/no-nested-ternary)
+
