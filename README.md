@@ -27,6 +27,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 15. [Don't leave commented out code in your codebase](#dont-leave-commented-out-code-in-your-codebase)
 16. [TODO comments](#todo-comments)
 17. [Imports - TypeScript aliases](#imports---typescript-aliases)
+18. [Always use curly braces for conditional statements](#always-use-curly-braces-for-conditional-statements)
 
 
 ## Invoking component functions directly
@@ -790,3 +791,48 @@ This will avoid long relative paths when doing imports.
 
 
 - [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
+
+## Always use curly braces for conditional statements
+
+❌ Avoid
+
+```typescript
+if (true) doSomething();
+
+if (user.isActive)
+  processUser(user);
+
+if (isValid)
+  return result;
+else
+  return null;
+```
+
+✅ Prefer
+
+```typescript
+if (true) {
+  doSomething();
+}
+
+if (user.isActive) {
+  processUser(user);
+}
+
+if (isValid) {
+  return result;
+} else {
+  return null;
+}
+```
+
+#### 🤔 ℹ️ Explanation 
+
+Using curly braces for all conditional statements, even single-line ones, improves code readability and prevents errors when adding additional statements later.
+It maintains consistency across the codebase and reduces the risk of introducing bugs during refactoring.
+This practice helps avoid issues with automatic semicolon insertion and makes the code structure more explicit.
+
+#### 📚 References
+
+- [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript#blocks--braces)
+- [ESLint curly rule](https://eslint.org/docs/rules/curly)
