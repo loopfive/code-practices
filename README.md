@@ -30,6 +30,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 18. [Always use curly braces for conditional statements](#always-use-curly-braces-for-conditional-statements)
 19. [Extract inline type definitions into proper type declarations](#extract-inline-type-definitions-into-proper-type-declarations)
 20. [Limit to one ternary operator per function](#limit-to-one-ternary-operator-per-function)
+21. [Constants and functions must be declared before return statements](#constants-and-functions-must-be-declared-before-return-statements)
 
 
 ## Invoking component functions directly
@@ -981,4 +982,80 @@ Complex ternary chains are prone to errors and make code maintenance more diffic
 
 - [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
 - [ESLint no-nested-ternary rule](https://eslint.org/docs/rules/no-nested-ternary)
+
+## Constants and functions must be declared before return statements
+
+❌ Avoid
+
+```typescript
+function processOrder(order: Order) {
+  if (!order.isValid) {
+    const errorMessage = 'Invalid order';
+    return { success: false, message: errorMessage };
+  }
+  
+  const calculateTax = (amount: number) => amount * 0.1;
+  const total = order.amount + calculateTax(order.amount);
+  
+  if (total > 1000) {
+    const discountRate = 0.05;
+    return { 
+      success: true, 
+      total: total - (total * discountRate),
+      discount: true 
+    };
+  }
+  
+  const shippingCost = 15;
+  return { 
+    success: true, 
+    total: total + shippingCost,
+    discount: false 
+  };
+}
+```
+
+✅ Prefer
+
+```typescript
+function processOrder(order: Order) {
+  const errorMessage = 'Invalid order';
+  const discountRate = 0.05;
+  const shippingCost = 15;
+  
+  const calculateTax = (amount: number) => amount * 0.1;
+  
+  if (!order.isValid) {
+    return { success: false, message: errorMessage };
+  }
+  
+  const total = order.amount + calculateTax(order.amount);
+  
+  if (total > 1000) {
+    return { 
+      success: true, 
+      total: total - (total * discountRate),
+      discount: true 
+    };
+  }
+  
+  return { 
+    success: true, 
+    total: total + shippingCost,
+    discount: false 
+  };
+}
+```
+
+#### 🤔 ℹ️ Explanation 
+
+Declaring constants and helper functions at the top of the function improves code readability and organization.
+It makes all dependencies and configuration values immediately visible when reading the function.
+This practice reduces cognitive load by separating data definitions from business logic.
+It also prevents scattered declarations throughout the function which can make the code harder to follow and maintain.
+
+#### 📚 References
+
+- [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
+- [JavaScript best practices - Variable declarations](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#declarations)
 
