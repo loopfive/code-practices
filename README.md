@@ -31,6 +31,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 19. [Extract inline type definitions into proper type declarations](#extract-inline-type-definitions-into-proper-type-declarations)
 20. [Limit to one ternary operator per function](#limit-to-one-ternary-operator-per-function)
 21. [Constants and functions must be declared before return statements](#constants-and-functions-must-be-declared-before-return-statements)
+22. [Object destructuring for function parameters](#object-destructuring-for-function-parameters)
 
 
 ## Invoking component functions directly
@@ -1058,4 +1059,48 @@ It also prevents scattered declarations throughout the function which can make t
 
 - [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
 - [JavaScript best practices - Variable declarations](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#declarations)
+
+## Object destructuring for function parameters
+
+❌ Avoid
+```typescript
+function distributeIntoRows(duplicatedItems, rowCount, fillEmpty, sortBySize) {
+  // Implementation
+}
+
+// Usage - unclear what each parameter represents
+const rows = distributeIntoRows(items, 3, true, false);
+```
+
+✅ Prefer
+```typescript
+interface DistributeOptions {
+  duplicatedItems: any[];
+  rowCount: number;
+  fillEmpty?: boolean;
+  sortBySize?: boolean;
+}
+
+function distributeIntoRows({duplicatedItems, rowCount, fillEmpty = false, sortBySize = true}: DistributeOptions) {
+  // Implementation
+}
+
+// Usage - self-documenting and order-independent
+const rows = distributeIntoRows({
+  duplicatedItems: items,
+  rowCount: 3,
+  fillEmpty: true,
+  sortBySize: false
+});
+```
+
+#### 🤔 ℹ️ Explanation 
+Parameter order matters with positional arguments - easy to make mistakes.
+Adding optional parameters becomes messy and breaks existing calls.
+Function calls are self-documenting when using object destructuring.
+Refactoring is safer since parameter order doesn't matter.
+
+#### 📚 References
+- [Clean Code: Function Arguments](https://github.com/ryanmcdermott/clean-code-javascript#function-arguments-2-or-fewer-ideally)
+- [JavaScript Clean Coding Best Practices](https://blog.risingstack.com/javascript-clean-coding-best-practices-node-js-at-scale/)
 
