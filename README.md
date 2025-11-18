@@ -32,7 +32,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 20. [Limit to one ternary operator per function](#limit-to-one-ternary-operator-per-function)
 21. [Constants and functions must be declared before return statements](#constants-and-functions-must-be-declared-before-return-statements)
 22. [Object destructuring for function parameters](#object-destructuring-for-function-parameters)
-
+23. [Never use the `any` type](#never-use-the-any-type)
 
 ## Invoking component functions directly
 
@@ -1104,3 +1104,30 @@ Refactoring is safer since parameter order doesn't matter.
 - [Clean Code: Function Arguments](https://github.com/ryanmcdermott/clean-code-javascript#function-arguments-2-or-fewer-ideally)
 - [JavaScript Clean Coding Best Practices](https://blog.risingstack.com/javascript-clean-coding-best-practices-node-js-at-scale/)
 
+## Never use the `any` type
+
+❌ Avoid
+
+```typescript
+let value: any = "hello";
+function process(input: any) {
+  // ...
+}
+```
+
+✅ Prefer
+
+```typescript
+let value: string = "hello";
+function process(input: string) {
+  // ...
+}
+```
+
+#### 🤔 ℹ️ Explanation
+
+Using `any` defeats the purpose of TypeScript's static type checking and removes all type safety. Always specify a more precise type. If you are unsure, use `unknown` or a union of possible types, but never use `any`.
+
+#### 📚 References
+
+- [TypeScript Handbook: any](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#any)
