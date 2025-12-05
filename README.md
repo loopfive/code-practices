@@ -12,27 +12,28 @@ These recommandations are based on TypeScript documentation, articles, and profe
 
 1. [Invoking component functions directly](#invoking-component-functions-directly)
 2. [Nesting component definitions](#nesting-component-definitions)
-3. [Use template literals to combine strings](#use-template-literals-to-combine-strings)
-4. [Use === instead of ==](#use--instead-of-)
-5. [Use meaningful variable names](#use-meaningful-variable-names)
-6. [Use the same vocabulary for the same type of variable](#use-the-same-vocabulary-for-the-same-type-of-variable)
-7. [Use default arguments instead of conditionals](#use-default-arguments-instead-of-conditionals)
-8. [Function arguments and Type Aliases](#function-arguments-and-type-aliases)
-9. [Functions should do one thing](#functions-should-do-one-thing)
-10. [Favor functional programming over imperative programming](#favor-functional-programming-over-imperative-programming)
-11. [Encapsulate conditionals](#encapsulate-conditionals)
-12. [Avoid negative conditionals](#avoid-negative-conditionals)
-13. [Avoid type checking](#avoid-type-checking)
-14. [Remove dead code](#remove-dead-code)
-15. [Don't leave commented out code in your codebase](#dont-leave-commented-out-code-in-your-codebase)
-16. [TODO comments](#todo-comments)
-17. [Imports - TypeScript aliases](#imports---typescript-aliases)
-18. [Always use curly braces for conditional statements](#always-use-curly-braces-for-conditional-statements)
-19. [Extract inline type definitions into proper type declarations](#extract-inline-type-definitions-into-proper-type-declarations)
-20. [Limit to one ternary operator per function](#limit-to-one-ternary-operator-per-function)
-21. [Constants and functions must be declared before return statements](#constants-and-functions-must-be-declared-before-return-statements)
-22. [Object destructuring for function parameters](#object-destructuring-for-function-parameters)
-23. [Never use the `any` type](#never-use-the-any-type)
+3. [When to use useMemo and useCallback](#when-to-use-usememo-and-usecallback)
+4. [Use template literals to combine strings](#use-template-literals-to-combine-strings)
+5. [Use === instead of ==](#use--instead-of-)
+6. [Use meaningful variable names](#use-meaningful-variable-names)
+7. [Use the same vocabulary for the same type of variable](#use-the-same-vocabulary-for-the-same-type-of-variable)
+8. [Use default arguments instead of conditionals](#use-default-arguments-instead-of-conditionals)
+9. [Function arguments and Type Aliases](#function-arguments-and-type-aliases)
+10. [Functions should do one thing](#functions-should-do-one-thing)
+11. [Favor functional programming over imperative programming](#favor-functional-programming-over-imperative-programming)
+12. [Encapsulate conditionals](#encapsulate-conditionals)
+13. [Avoid negative conditionals](#avoid-negative-conditionals)
+14. [Avoid type checking](#avoid-type-checking)
+15. [Remove dead code](#remove-dead-code)
+16. [Don't leave commented out code in your codebase](#dont-leave-commented-out-code-in-your-codebase)
+17. [TODO comments](#todo-comments)
+18. [Imports - TypeScript aliases](#imports---typescript-aliases)
+19. [Always use curly braces for conditional statements](#always-use-curly-braces-for-conditional-statements)
+20. [Extract inline type definitions into proper type declarations](#extract-inline-type-definitions-into-proper-type-declarations)
+21. [Limit to one ternary operator per function](#limit-to-one-ternary-operator-per-function)
+22. [Constants and functions must be declared before return statements](#constants-and-functions-must-be-declared-before-return-statements)
+23. [Object destructuring for function parameters](#object-destructuring-for-function-parameters)
+24. [Never use the `any` type](#never-use-the-any-type)
 
 ## Invoking component functions directly
 
@@ -171,6 +172,129 @@ Closure state leakage problem.
 
 
 - [3 React Mistakes, 1 App Killer](https://www.youtube.com/watch?v=QuLfCUh-iwI)
+
+## When to use useMemo and useCallback
+
+
+❌ Avoid
+
+
+```typescript
+function UserProfile({ userId }: { userId: string }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  // Unnecessary memoization - no expensive computation
+  const displayName = useMemo(() => {
+    return user ? `${user.firstName} ${user.lastName}` : 'Guest';
+  }, [user]);
+
+  // Unnecessary callback - not passed to a memoized child
+  const handleClick = useCallback(() => {
+    console.log('Profile clicked');
+  }, []);
+
+  return (
+    <div onClick={handleClick}>
+      <h1>{displayName}</h1>
+    </div>
+  );
+}
+```
+
+
+✅ Prefer
+
+
+```typescript
+function UserProfile({ userId }: { userId: string }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  // Simple string concatenation - no memoization needed
+  const displayName = user ? `${user.firstName} ${user.lastName}` : 'Guest';
+
+  // Simple function - no memoization needed
+  const handleClick = () => {
+    console.log('Profile clicked');
+  };
+
+  return (
+    <div onClick={handleClick}>
+      <h1>{displayName}</h1>
+    </div>
+  );
+}
+```
+
+
+✅ When to actually use them
+
+
+```typescript
+function ProductList({ products }: { products: Product[] }) {
+  const [filter, setFilter] = useState('');
+
+  // useMemo: expensive filtering operation on a potentially large list
+  const filteredProducts = useMemo(() => {
+    return products.filter(product =>
+      product.name.toLowerCase().includes(filter.toLowerCase())
+    ).sort((a, b) => a.price - b.price);
+  }, [products, filter]);
+
+  // useCallback: function passed to memoized child component
+  const handleProductClick = useCallback((productId: string) => {
+    console.log('Product clicked:', productId);
+  }, []);
+
+  return (
+    <div>
+      <input
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+      />
+      {filteredProducts.map(product => (
+        <MemoizedProductItem
+          key={product.id}
+          product={product}
+          onClick={handleProductClick}
+        />
+      ))}
+    </div>
+  );
+}
+
+const MemoizedProductItem = React.memo(ProductItem);
+```
+
+
+#### 🤔 ℹ️ Explanation
+
+
+`useMemo` and `useCallback` are optimization tools that come with their own overhead. Only use them when:
+
+**For useMemo:**
+- You're performing expensive calculations or transformations
+- You're working with large lists or arrays that need filtering, sorting, or mapping
+- The computation is noticeably impacting performance
+
+**For useCallback:**
+- You're passing the function as a prop to a memoized child component (using `React.memo`)
+- The function is used as a dependency in other hooks like `useEffect` or `useMemo`
+
+**Don't use them when:**
+- Performing simple operations like string concatenation or basic arithmetic
+- The component rarely re-renders
+- The overhead of memoization exceeds the performance benefit
+- You're just creating event handlers for DOM elements (not passing to memoized children)
+
+Remember: Premature optimization is the root of all evil. Only optimize when you have measured performance issues.
+
+
+#### 📚 References
+
+
+- [React Documentation - useMemo](https://react.dev/reference/react/useMemo)
+- [React Documentation - useCallback](https://react.dev/reference/react/useCallback)
+- [When to useMemo and useCallback](https://kentcdodds.com/blog/usememo-and-usecallback)
 
 ## Use template literals to combine strings
 
