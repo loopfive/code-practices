@@ -34,6 +34,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 22. [Constants and functions must be declared before return statements](#constants-and-functions-must-be-declared-before-return-statements)
 23. [Object destructuring for function parameters](#object-destructuring-for-function-parameters)
 24. [Never use the `any` type](#never-use-the-any-type)
+25. [Extract Magic Numbers and Non-Self-Explanatory Values into Constants](#extract-magic-numbers-and-non-self-explanatory-values-into-constants)
 
 ## Invoking component functions directly
 
@@ -1255,3 +1256,53 @@ Using `any` defeats the purpose of TypeScript's static type checking and removes
 #### 📚 References
 
 - [TypeScript Handbook: any](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#any)
+
+## Extract Magic Numbers and Non-Self-Explanatory Values into Constants
+
+❌ Avoid
+
+```typescript
+tabIndex={disabled ? -1 : 0}
+
+const maxRetries = 999;
+
+const padding = '16px';
+const borderRadius = '8px';
+```
+
+✅ Prefer
+
+```typescript
+const TAB_INDEX = {
+    DISABLED: -1,
+    ENABLED: 0,
+} as const;
+
+tabIndex={disabled ? TAB_INDEX.DISABLED : TAB_INDEX.ENABLED}
+
+const RETRY_CONFIG = {
+    MAX_ATTEMPTS: 3,
+    TIMEOUT_MS: 5000,
+} as const;
+
+const SPACING = {
+    SMALL: '8px',
+    MEDIUM: '16px',
+    LARGE: '24px',
+} as const;
+
+const BORDER_RADIUS = {
+    SMALL: '4px',
+    MEDIUM: '8px',
+    LARGE: '16px',
+} as const;
+```
+
+#### 🤔 ℹ️ Explanation
+
+Magic numbers and unexplained values are hard to understand and maintain. Named constants make the semantic meaning explicit and make code self-documenting. Use descriptive constant names that express intent, not just the value.
+
+#### 📚 References
+
+- [Code Readability Best Practices](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html)
+- [Clea Code: Magic Numbers](https://en.wikipedia.org/wiki/Magic_number_(programming))
