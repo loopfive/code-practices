@@ -35,6 +35,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 23. [Object destructuring for function parameters](#object-destructuring-for-function-parameters)
 24. [Never use the `any` type](#never-use-the-any-type)
 25. [Extract Magic Numbers and Non-Self-Explanatory Values into Constants](#extract-magic-numbers-and-non-self-explanatory-values-into-constants)
+26. [Avoid magic strings](#avoid-magic-strings)
 
 ## Invoking component functions directly
 
@@ -1306,3 +1307,58 @@ Magic numbers and unexplained values are hard to understand and maintain. Named 
 
 - [Code Readability Best Practices](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html)
 - [Clea Code: Magic Numbers](https://en.wikipedia.org/wiki/Magic_number_(programming))
+
+## Avoid magic strings
+
+❌ Avoid
+
+```typescript
+function getStatusLabel(isActive: boolean): string {
+  return isActive ? 'active' : 'inactive';
+}
+
+function handleResponse(status: string) {
+  if (status === 'success') {
+    showNotification('Operation completed successfully');
+  } else if (status === 'error') {
+    showNotification('Something went wrong');
+  }
+}
+```
+
+✅ Prefer
+
+```typescript
+enum StatusLabel {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+
+function getStatusLabel(isActive: boolean): string {
+  return isActive ? StatusLabel.ACTIVE : StatusLabel.INACTIVE;
+}
+
+enum ResponseStatus {
+  SUCCESS = 'success',
+  ERROR = 'error',
+}
+
+function handleResponse(status: ResponseStatus) {
+  if (status === ResponseStatus.SUCCESS) {
+    showNotification('Operation completed successfully');
+  } else if (status === ResponseStatus.ERROR) {
+    showNotification('Something went wrong');
+  }
+}
+```
+
+#### 🤔 ℹ️ Explanation
+
+Magic strings are raw string literals used directly in code without being assigned to a named constant or enum.
+They make code fragile because a typo in a string won't be caught by the compiler, whereas a misspelled enum member will.
+Using enums or constants provides a single source of truth, enables autocompletion, and makes refactoring safe since renaming a value only requires changing it in one place.
+
+#### 📚 References
+
+- [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
+- [TypeScript Handbook - Enums](https://www.typescriptlang.org/docs/handbook/enums.html)
