@@ -1,0 +1,8 @@
+{
+  "name": "loopfive-practices",
+  "description": "Loopfive's TypeScript and React practices: every change and review is checked against them.",
+  "author": {
+    "name": "Loopfive"
+  },
+  "hooks": "./hooks/hooks.json"
+}
