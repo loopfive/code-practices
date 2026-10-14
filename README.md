@@ -36,6 +36,7 @@ These recommandations are based on TypeScript documentation, articles, and profe
 24. [Never use the `any` type](#never-use-the-any-type)
 25. [Extract Magic Numbers and Non-Self-Explanatory Values into Constants](#extract-magic-numbers-and-non-self-explanatory-values-into-constants)
 26. [Avoid magic strings](#avoid-magic-strings)
+27. [Comment only what the code can't say](#comment-only-what-the-code-cant-say)
 
 ## Invoking component functions directly
 
@@ -1362,3 +1363,67 @@ Using enums or constants provides a single source of truth, enables autocompleti
 
 - [Clean code TypeScript](https://github.com/labs42io/clean-code-typescript)
 - [TypeScript Handbook - Enums](https://www.typescriptlang.org/docs/handbook/enums.html)
+
+## Comment only what the code can't say
+
+❌ Avoid
+
+```typescript
+/** The props of the materials table. */
+type MaterialRowProps = {
+  /** The material to show. */
+  material: ProjectMaterial;
+};
+
+/** Removes a material from the project. */
+const removeMaterial = async (material: ProjectMaterial) => {
+  // Set the loading state.
+  setRemovingId(material.id);
+
+  try {
+    // Call the API.
+    await deleteMaterial({ projectId, id: material.id });
+  } finally {
+    setRemovingId(null);
+  }
+};
+```
+
+✅ Prefer
+
+```typescript
+type MaterialRowProps = {
+  material: ProjectMaterial;
+};
+
+const removeMaterial = async (material: ProjectMaterial) => {
+  // TanStack reports `isPending` a tick late: a double click would remove it twice.
+  if (removing.current) {
+    return;
+  }
+
+  removing.current = true;
+
+  try {
+    await deleteMaterial({ projectId, id: material.id });
+  } finally {
+    removing.current = false;
+  }
+};
+```
+
+#### 🤔 ℹ️ Explanation
+
+A comment earns its place only when it tells the reader something the code can't: why a non-obvious choice was made, a constraint from outside the code (a library quirk, a business rule, a bug it works around), or a trap the next person would fall into.
+
+- No comment that repeats the name or the next line ("Removes a material", "Call the API").
+- No JSDoc by default on functions, types, props, constants or hooks. A good name and a typed signature are the documentation. Add JSDoc only to explain behaviour a caller can't guess from the signature.
+- No narrative comments describing the steps of a function, and no comments addressed to a reviewer ("fixed", "now also handles…").
+- Default to no comment. When in doubt, rename or extract instead.
+- This holds even when the surrounding code is heavily commented: don't match its density, match this rule.
+
+Comments go stale silently: the code changes, the comment doesn't, and it starts lying. Every comment is a line to maintain, so keep only the ones that would cost the reader real time to rediscover.
+
+#### 📚 References
+
+- [Clean code TypeScript: Comments](https://github.com/labs42io/clean-code-typescript#comments)
